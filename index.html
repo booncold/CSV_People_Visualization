@@ -1,9 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Login Demo</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #user-info {
+      margin-top: 20px;
+    }
+  </style>
+</head>
 <body>
+  <h1>Login with Google</h1>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+  <!-- Google Sign-In button -->
+  <div id="g_id_onload"
+       data-client_id="YOUR_CLIENT_ID_HERE"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
 
+  <div class="g_id_signin"></div>
+
+  <!-- Display user info -->
+  <div id="user-info"></div>
+
+  <script>
+    // Callback function after login
+    function handleCredentialResponse(response) {
+      // Decode JWT token (Google ID token)
+      const data = parseJwt(response.credential);
+      console.log(data); // Check user data in console
+
+      // Display user info
+      document.getElementById('user-info').innerHTML = `
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <img src="${data.picture}" alt="Profile Picture" width="100">
+      `;
+    }
+
+    // Function to decode JWT token
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
+    }
+  </script>
 </body>
 </html>
