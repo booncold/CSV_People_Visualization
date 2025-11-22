@@ -1,6 +1,6 @@
 // js/data.js
 export async function fetchSheetData() {
-  const url = 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?output=csv';
+  const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZ2JQZQxQs1Bb12V9Un_Ntxk-zuAKoGdRNXGCW3vNtYkgVhMhcmlVm-p2VEX7PXg9tERkuvSNKpHxr/pub?output=csv';
   const response = await fetch(url);
   const csvText = await response.text();
 
