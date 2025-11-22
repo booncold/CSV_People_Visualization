@@ -48,7 +48,7 @@ export async function fetchSheetData() {
         age: age || '',
         country: country || '',
         interest: interest || '',
-        netWorth
+        netWorth: netWorth
       };
     })
     .filter(Boolean);
