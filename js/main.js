@@ -46,6 +46,10 @@ function createTile(row, index) {
     element.className = 'element net-high';
   }
 
+  element.style.transformStyle = "preserve-3d";
+  element.style.willChange = "transform";
+  element.style.overflow = "hidden";
+
   // avatar / photo
   const img = document.createElement('img');
   img.src = row.photo || '';
