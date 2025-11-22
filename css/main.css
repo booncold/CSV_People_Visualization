@@ -124,10 +124,10 @@ html, body {
 .element.net-high    { background: linear-gradient(180deg,#2e8b57,#236b44) !important; }
 .element.net-unknown { background: linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95)) !important; }*/
 
-/* .element.net-low     { background: rgba(255, 0, 0, 1); }
+.element.net-low     { background: rgba(255, 0, 0, 1); }
 .element.net-mid     { background: rgba(0, 255, 0, 1); }
 .element.net-high    { background: rgba(0, 0, 255, 1); }
-.element.net-unknown { background: rgba(255, 255, 255, 1); } */
+.element.net-unknown { background: rgba(255, 255, 255, 1); }
 
 /* small responsiveness adjustments */
 @media (max-width: 800px) {
