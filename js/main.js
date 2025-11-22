@@ -33,18 +33,17 @@ window.showTablePage = async function showTablePage() {
 
 function createTile(row, index) {
   const element = document.createElement('div');
-  element.className = 'element';
 
   // determine net worth class
   const nw = row.netWorth;
   if (nw == null || isNaN(nw)) {
-    element.classList.add('net-unknown');
+    element.className = 'element net-unknown';
   } else if (nw < 100000) {
-    element.classList.add('net-low');
+    element.className = 'element net-low';
   } else if (nw <= 200000) {
-    element.classList.add('net-mid');
+    element.className = 'element net-mid';
   } else {
-    element.classList.add('net-high');
+    element.className = 'element net-high';
   }
 
   // avatar / photo
