@@ -41,7 +41,7 @@ function createTile(row, index) {
     element.classList.add('net-unknown');
   } else if (nw < 100000) {
     element.classList.add('net-low');
-  } else if (nw < 200000) {
+  } else if (nw <= 200000) {
     element.classList.add('net-mid');
   } else {
     element.classList.add('net-high');
