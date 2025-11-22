@@ -2,100 +2,86 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Google Login + People Table</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Login Demo</title>
 
-  <!-- Link to CSS -->
-  <link rel="stylesheet" href="css/main.css">
-
-  <!-- Google Sign-In library (keep as you had) -->
+  <!-- Google Login Library -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <!-- three.js and CSS3DRenderer + OrbitControls (non-module) -->
-  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-  <script src="https://threejs.org/examples/js/renderers/CSS3DRenderer.js"></script>
-  <script src="https://unpkg.com/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
-
   <style>
-    /* minimal page layout; main styles are in css/main.css */
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      min-height: 100vh;
+      margin-top: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: #111;
-      color: #fff;
     }
-    header {
-      width: 100%;
-      padding: 18px 12px;
-      text-align: center;
-      box-sizing: border-box;
+
+    h1 {
+      margin-bottom: 40px;
     }
-    .top-row {
+
+    .google-login-container {
       display: flex;
-      gap: 20px;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
+      gap: 10px;
     }
-    .google-login-container { display:flex; flex-direction:column; align-items:center; gap:8px; }
-    #user-info { color:#fff; text-align:center; margin-top:6px; }
-    /* container for 3D visualization */
-    #container {
-      width: 100%;
-      height: calc(100vh - 140px); /* leave room for header */
-      position: relative;
-      box-sizing: border-box;
+
+    #user-info {
+      margin-top: 30px;
+      text-align: center;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1 style="margin:0 0 8px 0; font-weight:400;">Welcome Back</h1>
+  <h1>Welcome Back</h1>
 
-    <div class="top-row">
-      <div class="google-login-container">
-        <div id="g_id_onload"
-             data-client_id="906330928868-vkr46rngc5ju6mn66qv8qg47r2fg5jej.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"></div>
-      </div>
-
-      <div id="user-info"></div>
+  <div class="google-login-container">
+    <!-- Google Sign-In Loader -->
+    <div 
+      id="g_id_onload"
+      data-client_id="906330928868-vkr46rngc5ju6mn66qv8qg47r2fg5jej.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+      data-auto_prompt="false">
     </div>
-  </header>
 
-  <!-- Visualization container -->
-  <div id="container"></div>
+    <!-- Google Sign-In Button -->
+    <div class="g_id_signin"></div>
+  </div>
 
-  <!-- Your app module -->
+  <!-- User Info After Login -->
+  <div id="user-info"></div>
+
+  <!-- JS Modules -->
   <script type="module" src="js/main.js"></script>
 
   <script>
-    // Google sign-in callback & JWT decode (keeps your existing behavior)
+    // Callback when Google Login succeeds
     function handleCredentialResponse(response) {
       const data = parseJwt(response.credential);
-      console.log('Google user:', data);
+      console.log(data);
+
       document.getElementById('user-info').innerHTML = `
-        <div style="text-align:center;">
-          <strong>${data.name}</strong><br/>
-          <small>${data.email}</small><br/>
-          <img src="${data.picture}" alt="Profile" width="56" style="margin-top:6px; border-radius:6px;">
-        </div>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <img src="${data.picture}" width="100" alt="Profile">
       `;
     }
 
+    // Decode JWT token
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
+
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+
       return JSON.parse(jsonPayload);
     }
   </script>
