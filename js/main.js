@@ -2,12 +2,11 @@
 // Creates window.showTablePage() which hides the login page and builds the 3D view
 import { fetchSheetData } from './data.js';
 
-// Use CDN imports so the project works without local threejs files.
-// You can change the version if needed.
-import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-import TWEEN from 'https://unpkg.com/three@0.160.0/examples/jsm/libs/tween.module.js';
-import { TrackballControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/TrackballControls.js';
-import { CSS3DRenderer, CSS3DObject } from 'https://unpkg.com/three@0.160.0/examples/jsm/renderers/CSS3DRenderer.js';
+// Use importmap-resolved specifiers for three and addons (importmap is declared in index.html)
+import * as THREE from 'three';
+import TWEEN from 'three/addons/libs/tween.module.js';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
 let camera, scene, renderer, controls;
 const objects = [];
@@ -52,6 +51,7 @@ function createTile(row, index) {
   element.style.overflow = 'hidden';
   element.style.border = '1px solid rgba(255,255,255,0.06)';
   element.style.boxShadow = '0 6px 18px rgba(0,0,0,0.4)';
+  element.style.position = 'relative';
 
   // background color by netWorth thresholds
   const nw = row.netWorth;
@@ -167,7 +167,6 @@ function init(dataRows) {
 
   // DOUBLE HELIX (two intertwined strands)
   const helixRadius = 600;
-  // We'll interleave items on two strands, keeping ordering along the helix
   for (let i = 0, l = objects.length; i < l; i++) {
     const strand = i % 2; // 0 or 1
     const idx = Math.floor(i / 2);
@@ -201,8 +200,7 @@ function init(dataRows) {
 
   // renderer
   if (renderer) {
-    // remove old DOM element
-    const old = document.querySelector('#container > canvas, #container > div');
+    const old = document.querySelector('#container > div');
     if (old && old.parentNode) old.parentNode.removeChild(old);
   }
   renderer = new CSS3DRenderer();
@@ -266,5 +264,4 @@ function render() {
   if (renderer && scene && camera) renderer.render(scene, camera);
 }
 
-// keep an initial export to make linter happy; primary API is window.showTablePage
 export default {};
