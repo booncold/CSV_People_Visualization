@@ -8,26 +8,28 @@
   <!-- Google Login Library -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
+  <!-- Import map for three.js and addons so module specifiers like "three" resolve -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
   <style>
-    :root { --bg: #000; --muted: rgba(200,255,255,0.08); --ui: rgba(127,255,255,0.9); }
+    :root { --bg: #000; --ui: rgba(127,255,255,0.9); }
     html,body { height:100%; margin:0; background:var(--bg); color: #dff; font-family: Arial, Helvetica, sans-serif; }
-    /* pages */
     #login-page, #table-page { width:100%; height:100vh; display:flex; align-items:center; justify-content:center; }
     #login-page { flex-direction:column; gap:18px; }
     #table-page { display:none; position:relative; overflow:hidden; }
-    /* login box */
     .login-box { text-align:center; color:#cfe; }
-    .login-box img { border-radius:50%; display:block; margin:10px auto; }
-    /* info badge */
     #info { position:absolute; left:16px; top:12px; color:var(--ui); z-index:20; }
-    /* 3D container */
     #container { width:100%; height:100vh; }
-    /* menu */
     #menu { position:absolute; bottom:20px; width:100%; text-align:center; z-index:20; }
     #menu button { color: var(--ui); background:transparent; outline:1px solid rgba(127,255,255,0.15); border:0; padding:8px 12px; cursor:pointer; margin:0 6px; border-radius:6px; }
     #menu button:hover { background: rgba(0,255,255,0.06); }
-
-    /* tile (element) minimal defaults; more styling is applied in JS */
     .element { box-shadow: 0 0 12px rgba(0,255,255,0.06); border-radius:8px; }
   </style>
 </head>
@@ -47,13 +49,6 @@
       </div>
 
       <div class="g_id_signin"></div>
-
-      <div id="user-info"></div>
-
-      <!-- fallback demo button (keeps testing easy if you prefer clicking) -->
-      <div style="margin-top:18px;">
-        <button id="demoSignIn" style="padding:8px 12px; border-radius:6px; cursor:pointer;">Demo sign in (no Google)</button>
-      </div>
     </div>
   </div>
 
@@ -74,30 +69,28 @@
   <script type="module" src="js/main.js"></script>
 
   <script>
-    // Called by Google GSI when login succeeds
+    // Called by Google GSI when login succeeds.
+    // We don't show any user info (per your request); we just reveal the 3D view.
     function handleCredentialResponse(response) {
+      // Optional: keep parseJwt available for debugging, but do not render user info.
+      // Attempt to parse but ignore contents.
       try {
-        const data = parseJwt(response.credential);
-        // show a short user info block
-        document.getElementById('user-info').innerHTML = `
-          <p><strong>${data.name}</strong></p>
-          <p style="font-size:0.9em; color:#9ff">${data.email}</p>
-          <img src="${data.picture}" width="72" alt="Profile">
-        `;
+        const _data = parseJwt(response.credential);
+        // do not display user info
       } catch (e) {
-        console.warn('Could not parse credential response', e);
+        // ignore parsing errors
       }
 
       // Show the 3D table page (main.js exposes this)
       if (window.showTablePage) {
         window.showTablePage();
       } else {
-        // main.js hasn't loaded yet — try again shortly
+        // main.js might not be ready yet — try again shortly
         setTimeout(() => { if (window.showTablePage) window.showTablePage(); }, 250);
       }
     }
 
-    // Decode JWT token (from GSI)
+    // Decode JWT token (kept for potential debugging; not used for display)
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -106,13 +99,6 @@
       }).join(''));
       return JSON.parse(jsonPayload);
     }
-
-    // Demo sign-in (for testing without Google)
-    document.getElementById('demoSignIn').addEventListener('click', () => {
-      // optionally show demo user info
-      document.getElementById('user-info').innerHTML = `<p><strong>Demo User</strong></p>`;
-      if (window.showTablePage) window.showTablePage();
-    });
   </script>
 </body>
 </html>
