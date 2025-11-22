@@ -116,10 +116,10 @@ html, body {
 }
 
 /* Background color classes (net worth) */
-.element.net-low { background: linear-gradient(180deg,#b22222,#8b1a1a); }      /* <100k */
-.element.net-mid { background: linear-gradient(180deg,#ff8c00,#c86b00); }      /* 100k - 200k */
-.element.net-high{ background: linear-gradient(180deg,#2e8b57,#236b44); }      /* >200k */
-.element.net-unknown { background: linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95)); }
+.three-css-object .element.net-low     { background: linear-gradient(180deg,#b22222,#8b1a1a); !important }
+.three-css-object .element.net-mid     { background: linear-gradient(180deg,#ff8c00,#c86b00); !important }
+.three-css-object .element.net-high    { background: linear-gradient(180deg,#2e8b57,#236b44); !important }
+.three-css-object .element.net-unknown { background: linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95)); !important }
 
 /* small responsiveness adjustments */
 @media (max-width: 800px) {
