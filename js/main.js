@@ -123,19 +123,19 @@ function init(dataRows) {
     const phi = Math.acos(-1 + (2 * i) / l);
     const theta = Math.sqrt(l * Math.PI) * phi;
     const object = new THREE.Object3D();
-    object.position.setFromSphericalCoords(800, phi, theta);
+    object.position.setFromSphericalCoords(900, phi, theta);
     vector.copy(object.position).multiplyScalar(2);
     object.lookAt(vector);
     targets.sphere.push(object);
   }
 
   // DOUBLE HELIX (two intertwined strands)
-  const helixRadius = 600;
+  const helixRadius = 800;
   for (let i = 0, l = objects.length; i < l; i++) {
     const strand = i % 2; // 0 or 1
     const idx = Math.floor(i / 2);
     const theta = idx * 0.5 + (strand === 0 ? 0 : Math.PI); // phase offset for second strand
-    const y = - (idx * 18) + (l / 4);
+    const y = - (idx * 25) + (l / 4);
     const object = new THREE.Object3D();
     object.position.x = Math.cos(theta) * helixRadius;
     object.position.z = Math.sin(theta) * helixRadius;
