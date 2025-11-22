@@ -130,8 +130,8 @@ function init(dataRows) {
   for (let i = 0, l = objects.length; i < l; i++) {
     const strand = i % 2; // 0 or 1
     const idx = Math.floor(i / 2);
-    const theta = idx * 0.5 + (strand === 0 ? 0 : Math.PI); // phase offset for second strand
-    const y = - (idx * 200) + (l / 4);
+    const theta = idx * 0.3 + (strand === 0 ? 0 : Math.PI); // phase offset for second strand
+    const y = - (idx * 110) + (l / 4);
     const object = new THREE.Object3D();
     object.position.x = Math.cos(theta) * helixRadius;
     object.position.z = Math.sin(theta) * helixRadius;
