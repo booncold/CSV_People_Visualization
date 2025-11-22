@@ -36,10 +36,10 @@ function createTile(row, index) {
 
   // assign net worth classes
   const nw = row.netWorth;
-  if (nw == null || isNaN(nw)) element.className = 'element net-unknown';
-  else if (nw < 100) element.className = 'element net-low';
-  else if (nw <= 200) element.className = 'element net-mid';
-  else element.className = 'element net-high';
+  if (nw == null || isNaN(nw)) element.className = 'net-unknown';
+  else if (nw < 100) element.className = 'net-low';
+  else if (nw <= 200) element.className = 'net-mid';
+  else element.className = 'net-high';
 
   // avatar / photo
   const img = document.createElement('img');
