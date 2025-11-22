@@ -20,13 +20,16 @@ export async function fetchSheetData() {
     // Skip lines that don't have enough columns
     if(values.length < headers.length) return null;
 
+    const rawNet = values[5] || '';
+    const netWorth = rawNet ? parseFloat(rawNet.replace(/[\^\d.-]/g, '')) : null;
+
     return {
       name: values[0],
       photo: values[1],
       age: values[2],
       country: values[3],
       interest: values[4],
-      netWorth: parseFloat(values[5].replace(/[\$,]/g, '')) // convert $251,260.80 → 251260.8
+      netWorth
     };
   }).filter(Boolean); // remove null entries
 
