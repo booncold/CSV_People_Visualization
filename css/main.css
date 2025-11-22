@@ -118,16 +118,11 @@ html, body {
   opacity: 0.9;
 }
 
-/* Background color classes (net worth) 
+/* Background color classes (net worth) */
 .element.net-low     { background: linear-gradient(180deg,#b22222,#8b1a1a) !important; }
 .element.net-mid     { background: linear-gradient(180deg,#ff8c00,#c86b00) !important; }
 .element.net-high    { background: linear-gradient(180deg,#2e8b57,#236b44) !important; }
-.element.net-unknown { background: linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95)) !important; }*/
-
-.net-low     { background: rgba(255, 0, 0, 1); }
-.net-mid     { background: rgba(0, 255, 0, 1); }
-.net-high    { background: rgba(0, 0, 255, 1); }
-.net-unknown { background: rgba(255, 255, 255, 1); }
+.element.net-unknown { background: linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95)) !important; }
 
 /* small responsiveness adjustments */
 @media (max-width: 800px) {
