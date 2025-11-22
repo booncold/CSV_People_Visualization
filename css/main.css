@@ -1,1 +1,74 @@
+/* css/main.css */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #111;
+  color: #fff;
+}
 
+/* Title handled inline; layout container is #container in index.html */
+
+.element {
+  width: 120px;
+  height: 160px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 10px;
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: rgba(255,255,255,0.04);
+  transition: transform 0.25s, box-shadow 0.25s;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.element .photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 6px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 8px;
+  border: 2px solid rgba(255,255,255,0.06);
+}
+
+.element .name {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.element .meta {
+  font-size: 11px;
+  opacity: 0.9;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.element .networth {
+  margin-top: auto;
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.2);
+}
+
+/* hover effect (will be toggled in JS too) */
+.element:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+}
+
+/* responsive smaller tiles */
+@media (max-width: 640px) {
+  .element { width: 96px; height: 140px; padding: 8px; }
+  .element .photo { width: 78px; height: 78px; }
+}
