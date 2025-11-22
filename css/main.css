@@ -1,1 +1,128 @@
+/* css/main.css - global styles and tile styles */
 
+:root {
+  --bg: #000;
+  --muted: rgba(200,255,255,0.06);
+  --ui: rgba(127,255,255,0.9);
+  --tile-w: 160px;
+  --tile-h: 200px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: #dff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Pages */
+#login-page, #table-page {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#login-page { flex-direction: column; gap: 18px; }
+#table-page { display: none; position: relative; overflow: hidden; }
+
+/* Login box */
+.login-box { text-align: center; color: #cfe; }
+
+/* Info badge */
+#info {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  color: var(--ui);
+  z-index: 20;
+}
+
+/* Container for CSS3DRenderer */
+#container { width: 100%; height: 100vh; }
+
+/* Menu */
+#menu {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  z-index: 20;
+}
+#menu button {
+  color: var(--ui);
+  background: transparent;
+  outline: 1px solid rgba(127,255,255,0.15);
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin: 0 6px;
+  border-radius: 6px;
+}
+#menu button:hover { background: rgba(0,255,255,0.06); }
+
+/* Tile (element) */
+.element {
+  width: var(--tile-w);
+  height: var(--tile-h);
+  box-sizing: border-box;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 10px;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  position: relative;
+}
+
+/* avatar */
+.element img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.14);
+  margin-top: 6px;
+}
+
+/* name and details */
+.element .name {
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 8px;
+  text-align: center;
+}
+.element .details {
+  font-size: 12px;
+  margin-top: 6px;
+  text-align: center;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* badge index */
+.element .badge {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+/* Background color classes (net worth) */
+.net-low { background: linear-gradient(180deg,#b22222,#8b1a1a); }      /* <100k */
+.net-mid { background: linear-gradient(180deg,#ff8c00,#c86b00); }      /* 100k - 200k */
+.net-high{ background: linear-gradient(180deg,#2e8b57,#236b44); }      /* >=200k */
+.net-unknown { background: linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95)); }
+
+/* small responsiveness adjustments */
+@media (max-width: 800px) {
+  :root { --tile-w: 130px; --tile-h: 170px; }
+  #menu { bottom: 12px; }
+}
