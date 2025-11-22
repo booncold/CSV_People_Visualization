@@ -1,8 +1,8 @@
 // js/main.js
-// Creates window.showTablePage() which hides the login page and builds the 3D view
-import { fetchSheetData } from './data.js';
+// Builds the 3D CSS3D visualization using data from js/data.js
+// Imports use the importmap defined in index.html so "three" and "three/addons/..." resolve.
 
-// Use importmap-resolved specifiers for three and addons (importmap is declared in index.html)
+import { fetchSheetData } from './data.js';
 import * as THREE from 'three';
 import TWEEN from 'three/addons/libs/tween.module.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
@@ -12,7 +12,7 @@ let camera, scene, renderer, controls;
 const objects = [];
 const targets = { table: [], sphere: [], helix: [], grid: [] };
 
-// Expose the function so index.html can call it after login
+// Expose the function so index.html's Google login callback can call it
 window.showTablePage = async function showTablePage() {
   // hide login UI and show table page
   const loginPage = document.getElementById('login-page');
@@ -27,7 +27,6 @@ window.showTablePage = async function showTablePage() {
     return;
   }
 
-  // Initialize visualization
   init(rows);
   animate();
 };
@@ -35,63 +34,34 @@ window.showTablePage = async function showTablePage() {
 function createTile(row, index) {
   const element = document.createElement('div');
   element.className = 'element';
-  // base styling
-  element.style.width = '160px';
-  element.style.height = '200px';
-  element.style.boxSizing = 'border-box';
-  element.style.padding = '10px';
-  element.style.display = 'flex';
-  element.style.flexDirection = 'column';
-  element.style.alignItems = 'center';
-  element.style.justifyContent = 'flex-start';
-  element.style.borderRadius = '10px';
-  element.style.color = '#fff';
-  element.style.fontFamily = 'Helvetica, Arial, sans-serif';
-  element.style.backdropFilter = 'blur(2px)';
-  element.style.overflow = 'hidden';
-  element.style.border = '1px solid rgba(255,255,255,0.06)';
-  element.style.boxShadow = '0 6px 18px rgba(0,0,0,0.4)';
-  element.style.position = 'relative';
 
-  // background color by netWorth thresholds
+  // determine net worth class
   const nw = row.netWorth;
   if (nw == null || isNaN(nw)) {
-    element.style.background = 'linear-gradient(180deg, rgba(80,80,80,0.95), rgba(60,60,60,0.95))';
+    element.classList.add('net-unknown');
   } else if (nw < 100000) {
-    element.style.background = 'linear-gradient(180deg,#b22222,#8b1a1a)'; // red
+    element.classList.add('net-low');
   } else if (nw < 200000) {
-    element.style.background = 'linear-gradient(180deg,#ff8c00,#c86b00)'; // orange
+    element.classList.add('net-mid');
   } else {
-    element.style.background = 'linear-gradient(180deg,#2e8b57,#236b44)'; // green
+    element.classList.add('net-high');
   }
 
   // avatar / photo
   const img = document.createElement('img');
   img.src = row.photo || '';
   img.alt = row.name || '';
-  img.style.width = '96px';
-  img.style.height = '96px';
-  img.style.objectFit = 'cover';
-  img.style.borderRadius = '50%';
-  img.style.border = '2px solid rgba(255,255,255,0.14)';
-  img.style.marginTop = '6px';
   element.appendChild(img);
 
   // name
   const name = document.createElement('div');
+  name.className = 'name';
   name.textContent = row.name || '(no name)';
-  name.style.fontSize = '14px';
-  name.style.fontWeight = '700';
-  name.style.marginTop = '8px';
-  name.style.textAlign = 'center';
   element.appendChild(name);
 
-  // details
+  // details text
   const details = document.createElement('div');
-  details.style.fontSize = '12px';
-  details.style.marginTop = '6px';
-  details.style.textAlign = 'center';
-  details.style.lineHeight = '1.2';
+  details.className = 'details';
   const netStr = (row.netWorth != null && !isNaN(row.netWorth)) ? '$' + Number(row.netWorth).toLocaleString() : '-';
   details.innerHTML = `
     Age: ${row.age || '-'}<br>
@@ -101,22 +71,18 @@ function createTile(row, index) {
   `;
   element.appendChild(details);
 
-  // small index number
+  // index badge
   const badge = document.createElement('div');
+  badge.className = 'badge';
   badge.textContent = (index + 1);
   badge.style.position = 'absolute';
-  badge.style.right = '10px';
-  badge.style.top = '8px';
-  badge.style.fontSize = '11px';
-  badge.style.opacity = '0.9';
   element.appendChild(badge);
 
-  const obj = new CSS3DObject(element);
-  return obj;
+  return new CSS3DObject(element);
 }
 
 function init(dataRows) {
-  // reset arrays & scene
+  // clear previous scene if any
   objects.length = 0;
   targets.table.length = targets.sphere.length = targets.helix.length = targets.grid.length = 0;
 
@@ -125,7 +91,7 @@ function init(dataRows) {
 
   scene = new THREE.Scene();
 
-  // create CSS3D objects
+  // create CSS3D objects for every row
   dataRows.forEach((row, i) => {
     const objectCSS = createTile(row, i);
     objectCSS.position.x = Math.random() * 4000 - 2000;
@@ -135,7 +101,7 @@ function init(dataRows) {
     objects.push(objectCSS);
   });
 
-  // TABLE: 20x10 (cols x rows)
+  // TABLE layout: 20 x 10 (cols x rows) with layered z if >200
   const cols = 20;
   const rows = 10;
   const spacingX = 180;
@@ -145,15 +111,15 @@ function init(dataRows) {
   for (let i = 0; i < objects.length; i++) {
     const col = i % cols;
     const row = Math.floor(i / cols) % rows;
-    const layer = Math.floor(i / (cols * rows)); // if more than 200, put into layers
+    const layer = Math.floor(i / (cols * rows)); // new layer every 200 items
     const object = new THREE.Object3D();
     object.position.x = (col * spacingX) - offsetX;
     object.position.y = - (row * spacingY) + offsetY;
-    object.position.z = (layer * 420) - 420; // small z offset per layer
+    object.position.z = (layer * 420) - 420; // layer offset
     targets.table.push(object);
   }
 
-  // SPHERE
+  // SPHERE layout
   const vector = new THREE.Vector3();
   for (let i = 0, l = objects.length; i < l; i++) {
     const phi = Math.acos(-1 + (2 * i) / l);
@@ -170,7 +136,7 @@ function init(dataRows) {
   for (let i = 0, l = objects.length; i < l; i++) {
     const strand = i % 2; // 0 or 1
     const idx = Math.floor(i / 2);
-    const theta = idx * 0.5 + (strand === 0 ? 0 : Math.PI); // phase offset
+    const theta = idx * 0.5 + (strand === 0 ? 0 : Math.PI); // phase offset for second strand
     const y = - (idx * 18) + (l / 4);
     const object = new THREE.Object3D();
     object.position.x = Math.cos(theta) * helixRadius;
@@ -181,7 +147,7 @@ function init(dataRows) {
     targets.helix.push(object);
   }
 
-  // GRID: 5 x 4 x 10 (x,y,z)
+  // GRID: 5 x 4 x 10 (x, y, z)
   const gx = 5, gy = 4, gz = 10;
   const spacingGX = 300, spacingGY = 240, spacingGZ = 500;
   const offsetGX = (gx - 1) * spacingGX / 2;
@@ -198,8 +164,9 @@ function init(dataRows) {
     targets.grid.push(object);
   }
 
-  // renderer
+  // renderer (CSS3D)
   if (renderer) {
+    // remove old renderer DOM if present
     const old = document.querySelector('#container > div');
     if (old && old.parentNode) old.parentNode.removeChild(old);
   }
@@ -214,13 +181,13 @@ function init(dataRows) {
   controls.maxDistance = 6000;
   controls.addEventListener('change', render);
 
-  // button hooks
+  // buttons
   document.getElementById('table').addEventListener('click', () => transform(targets.table, 2000));
   document.getElementById('sphere').addEventListener('click', () => transform(targets.sphere, 2000));
   document.getElementById('helix').addEventListener('click', () => transform(targets.helix, 2000));
   document.getElementById('grid').addEventListener('click', () => transform(targets.grid, 2000));
 
-  // initial layout
+  // initial transform
   transform(targets.table, 2000);
 
   window.addEventListener('resize', onWindowResize, false);
@@ -264,4 +231,5 @@ function render() {
   if (renderer && scene && camera) renderer.render(scene, camera);
 }
 
+// keep a default export so bundlers/linting don't complain
 export default {};
