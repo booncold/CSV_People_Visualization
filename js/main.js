@@ -32,23 +32,18 @@ window.showTablePage = async function showTablePage() {
 };
 
 function createTile(row, index) {
+  const wrapper = document.createElement('div'); // wrapper for CSS3DObject
+
   const element = document.createElement('div');
 
-  // determine net worth class
+  // assign net worth classes
   const nw = row.netWorth;
-  if (nw == null || isNaN(nw)) {
-    element.className = 'element net-unknown';
-  } else if (nw < 100000) {
-    element.className = 'element net-low';
-  } else if (nw <= 200000) {
-    element.className = 'element net-mid';
-  } else {
-    element.className = 'element net-high';
-  }
+  if (nw == null || isNaN(nw)) element.className = 'element net-unknown';
+  else if (nw < 100000) element.className = 'element net-low';
+  else if (nw <= 200000) element.className = 'element net-mid';
+  else element.className = 'element net-high';
 
-  element.style.transformStyle = "preserve-3d";
-  element.style.willChange = "transform";
-  element.style.overflow = "hidden";
+  wrapper.appendChild(element);
 
   // avatar / photo
   const img = document.createElement('img');
