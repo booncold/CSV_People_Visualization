@@ -32,8 +32,6 @@ window.showTablePage = async function showTablePage() {
 };
 
 function createTile(row, index) {
-  const wrapper = document.createElement('div'); // wrapper for CSS3DObject
-
   const element = document.createElement('div');
 
   // assign net worth classes
@@ -42,8 +40,6 @@ function createTile(row, index) {
   else if (nw < 100000) element.className = 'element net-low';
   else if (nw <= 200000) element.className = 'element net-mid';
   else element.className = 'element net-high';
-
-  wrapper.appendChild(element);
 
   // avatar / photo
   const img = document.createElement('img');
